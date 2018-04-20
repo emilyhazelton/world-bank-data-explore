@@ -1,3 +1,13 @@
+#EHazelton Additions
+country_names.txt
+indicator_names.txt
+WDICountry.csv
+WDICountry-Series.csv
+WDIFootNote.csv
+WDISeries.csv
+WDISeries-Time.csv
+.ipynb_checkpoints*
+
 # Windows image file caches
 Thumbs.db
 ehthumbs.db
