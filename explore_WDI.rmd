@@ -1,0 +1,88 @@
+---
+title: "Exploration of World Development Indicators"
+author: "EHazelton"
+date: "July 15, 2018"
+output: html_document
+---
+
+#note - ideas and inspriation from 
+#https://www.kaggle.com/captcalculator/world-development-indicators-sql-dbplyr-highcharts
+
+```{r setup, include=FALSE}
+library(tidyverse)
+
+```
+
+```{r import}
+# import World development indicators provided by World Bank
+# https://datacatalog.worldbank.org/dataset/world-development-indicators
+#country_series <- read_csv("wDICountry-Series.csv")
+country <- read_csv("WDICountry.csv")
+data <- read_csv("WDIData.csv")
+#footnote <- read_csv("WDIFootNote.csv")
+#series_time <- read_csv("WDISeries-Time.csv")
+#series <- read_csv("WDISeries.csv")
+```
+
+```{r initial exploring}
+# How many unique indicators exist, and what are they? 
+indicators <- unique(data$`Indicator Name`)
+#write.csv(indicators, "output_indicator_list.csv")
+
+# How are countries grouped by region?
+(regions <- unique(country$Region))
+
+# Tidy data
+###### Need to add-> spread the indicators; use indicator codes; before, save a indicator name / indicator code cheat sheet
+data <- data %>%
+  select(-`Country Code`) %>%
+  gather(`1960`:`2017`, key = "year", value = "value", convert = T)
+
+# How much USA data do we have?
+usa <- data %>%
+  filter(`Country Name` == 'United States')
+```
+
+Noticed several Co2 emmisions indicators -- what does the general one look like
+for the United States?
+```{r co2 in USA}
+emissions <- filter(usa, `Indicator Name` == 'CO2 emissions (kt)')
+
+# C02 Emissions for USA
+ggplot(emissions, aes(year, value)) + 
+  geom_line() + 
+  labs(title = "CO2 Emissions in United States",
+       x = "Year",
+       y ="Emissions (kt)")
+```
+
+Why is there a dip in the early 1980s in CO2 emissions? And in late 2000s? 
+
+What percentages of Americans do not have electricity? 
+```{r hiv}
+hiv <- usa %>%
+  filter(`Indicator Name` == 'Adults (ages 15+) newly infected with HIV')
+
+#### Update - x ticks to be rounded years
+ggplot(hiv, aes(year, value)) +
+  geom_point() +
+  xlim(c(2007,2017)) +
+  labs(title = "US Cases of HIV - newly infected adults (ages 15+)")
+
+```
+
+Although the adult demographic is the only one with numbers, it is exciting
+to see that the number of HIV cases is steadily dropping year over year. 
+
+I wonder why we don't have data since 2014? 
+
+# Metric for female labor participation rate, USA? 
+
+# Female education vs male education in USA?
+
+# How does USA female participation rate compare to FPR of other countries?
+
+# How does US armed forces personnel, percent of total, compare to other countries?
+### > use the boxy graph thing (where labels are sized according to portion)
+# What about percent spending on weapons?
+# What about percent export of weapons? 
